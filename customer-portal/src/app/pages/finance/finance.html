@@ -1,0 +1,144 @@
+<div class="page">
+
+  <button class="back-btn" (click)="goBack()">&#8592; Back</button>
+
+  <h2>Financial Dashboard</h2>
+
+  <div class="card-grid">
+
+    <div class="card" (click)="viewMode='aging'">
+      <h4>Aging Details</h4>
+      <p>View outstanding balances and aging days</p>
+    </div>
+
+    <div class="card" (click)="viewMode='credit'">
+      <h4>Credit & Debit</h4>
+      <p>View financial transactions</p>
+    </div>
+
+    <div class="card" (click)="viewMode='invoice'">
+      <h4>Invoices</h4>
+      <p>View invoices and download PDF</p>
+    </div>
+
+    <div class="card" (click)="viewMode='summary'">
+      <h4>Total Summary</h4>
+      <p>Overall financial amount</p>
+    </div>
+
+  </div>
+
+  <div *ngIf="viewMode==='aging'">
+
+    <div class="filter-box">
+      <input type="text" placeholder="Search Sales Document"
+             [(ngModel)]="searchAging" (input)="applyAgingFilter()">
+
+      <select [(ngModel)]="selectedCurrency" (change)="applyAgingFilter()">
+        <option value="">All Currency</option>
+        <option *ngFor="let c of currencies">{{c}}</option>
+      </select>
+
+      <button (click)="clearAgingFilter()">Clear</button>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Sales Document Number</th>
+          <th>Billing Date</th>
+          <th>Amount</th>
+          <th>Currency</th>
+          <th>Aging Days</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let a of filteredAging">
+          <td>{{a.documentNumber}}</td>
+          <td>{{a.date}}</td>
+          <td>{{a.amount}}</td>
+          <td>{{a.currency}}</td>
+          <td>{{a.agingDays}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="viewMode==='credit'">
+
+    <div class="filter-box">
+      <input type="text" placeholder="Search Accounting Document"
+             [(ngModel)]="searchCredit" (input)="applyCreditFilter()">
+
+      <select [(ngModel)]="selectedType" (change)="applyCreditFilter()">
+        <option value="">All Type</option>
+        <option value="Credit">Credit</option>
+        <option value="Debit">Debit</option>
+      </select>
+
+      <button (click)="clearCreditFilter()">Clear</button>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Accounting Document</th>
+          <th>Posting Date</th>
+          <th>Amount</th>
+          <th>Type</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let c of filteredCredit">
+          <td>{{c.documentNumber}}</td>
+          <td>{{c.date}}</td>
+          <td>{{c.amount}}</td>
+          <td>{{c.type}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="viewMode==='invoice'">
+
+    <div class="filter-box">
+      <input type="text" placeholder="Search Invoice Number"
+             [(ngModel)]="searchInvoice" (input)="applyInvoiceFilter()">
+
+      <select [(ngModel)]="selectedInvoiceCurrency" (change)="applyInvoiceFilter()">
+        <option value="">All Currency</option>
+        <option *ngFor="let c of invoiceCurrencies">{{c}}</option>
+      </select>
+
+      <button (click)="clearInvoiceFilter()">Clear</button>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Invoice Number</th>
+          <th>Date</th>
+          <th>Amount</th>
+          <th>Currency</th>
+          <th>PDF</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let i of filteredInvoice">
+          <td>{{i.invoiceNumber}}</td>
+          <td>{{i.date}}</td>
+          <td>{{i.amount}}</td>
+          <td>{{i.currency}}</td>
+          <td>
+            <button (click)="viewPDF(i.invoiceNumber)">View PDF</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="viewMode==='summary'" class="summary">
+    Total Amount: {{totalAmount}}
+  </div>
+
+</div>

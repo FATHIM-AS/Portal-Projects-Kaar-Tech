@@ -1,0 +1,97 @@
+.page {
+  padding: 24px;
+  background: #d6c6b2;
+  min-height: 100vh;
+}
+
+h2 {
+  color: #7a0c0c;
+  margin-bottom: 24px;
+}
+
+.filter-box {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+
+.search-input {
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  background: white;
+  font-size: 14px;
+  width: 240px;
+  transition: 0.2s ease;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #8b0d13;
+  box-shadow: 0 0 0 2px rgba(139, 13, 19, 0.2);
+}
+
+.filter-box select {
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  background: white;
+  cursor: pointer;
+  min-width: 180px;
+}
+
+.filter-box button {
+  padding: 10px 18px;
+  border-radius: 8px;
+  background: #8b0d13;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.table-box {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  margin-top: 10px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th {
+  background: #7a0c0c;
+  color: white;
+  padding: 14px;
+  border: 1px solid #ccc;
+}
+
+td {
+  padding: 14px;
+  border: 1px solid #ccc;
+}
+
+.back-btn {
+  background: transparent;
+  color: #8b0d13;
+  border: 2px solid #8b0d13;
+  padding: 6px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 16px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: 0.2s ease;
+}
+
+.back-btn:hover {
+  background: #8b0d13;
+  color: white;
+}

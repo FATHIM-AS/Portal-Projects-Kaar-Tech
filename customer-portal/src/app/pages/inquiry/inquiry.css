@@ -1,0 +1,197 @@
+.page {
+  padding: 20px;
+  font-family: "Segoe UI", Arial, sans-serif;
+  background: #d6c5b0;
+}
+
+h2 {
+  margin-bottom: 15px;
+  color: #6b0f1a;
+}
+
+.filter-box {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.search-input {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  background: white;
+  font-family: "Segoe UI", Arial, sans-serif;
+  font-size: 14px;
+  width: 220px;
+  transition: 0.2s ease;
+}
+
+.search-input::placeholder {
+  color: #aaa;
+}
+
+.search-input:hover {
+  border-color: #8b0d13;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #8b0d13;
+  box-shadow: 0 0 0 2px rgba(139, 13, 19, 0.2);
+}
+
+select {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  background: white;
+  cursor: pointer;
+  transition: 0.2s ease;
+  font-family: "Segoe UI", Arial, sans-serif;
+  font-size: 14px;
+}
+
+select:hover {
+  border-color: #8b0d13;
+}
+
+select:focus {
+  outline: none;
+  border-color: #8b0d13;
+  box-shadow: 0 0 0 2px rgba(139, 13, 19, 0.2);
+}
+
+button {
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: none;
+  background: #8b0d13;
+  color: white;
+  cursor: pointer;
+  transition: 0.2s ease;
+  font-weight: 500;
+}
+
+button:hover {
+  background: #a3161c;
+}
+
+button:active {
+  transform: scale(0.97);
+}
+
+.table-container {
+  background: white;
+  padding: 15px;
+  border-radius: 14px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 900px;
+}
+
+thead {
+  background: #8b0d13;
+  color: white;
+}
+
+th {
+  padding: 12px;
+  text-align: center;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+td {
+  padding: 10px;
+  text-align: center;
+  border-top: 1px solid #eee;
+  color: #333;
+}
+
+tbody tr:nth-child(even) {
+  background: #fafafa;
+}
+
+tbody tr:hover {
+  background: #f1f1f1;
+  transition: 0.2s;
+}
+
+/* Status badge — TEXT IS BLACK for readability */
+.status-badge {
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #1a1a1a;        /* ← Changed from white to near-black */
+  display: inline-block;
+}
+
+.status-badge.A {
+  background: #c8f0c8;   /* soft green */
+  color: #1a5c1a;
+}
+
+.status-badge.O {
+  background: #ffe5b4;   /* soft orange */
+  color: #7a4500;
+}
+
+.status-badge.C {
+  background: #c8dff5;   /* soft blue */
+  color: #0a3f70;
+}
+
+/* Fallback for any other status — dark text on light grey */
+.status-badge:not(.A):not(.O):not(.C) {
+  background: #e8e8e8;
+  color: #333;
+}
+
+.loading {
+  text-align: center;
+  padding: 20px;
+  color: #777;
+  font-size: 14px;
+}
+
+.no-data {
+  text-align: center;
+  padding: 20px;
+  font-weight: 500;
+  color: #999;
+}
+
+tbody tr td[colspan] {
+  text-align: center;
+  font-weight: 600;
+  padding: 20px;
+  color: #777;
+}
+.back-btn {
+  background: transparent;
+  color: #8b0d13;        /* use #7a0f16 for sales-order */
+  border: 2px solid #8b0d13;
+  padding: 6px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: 0.2s ease;
+}
+
+.back-btn:hover {
+  background: #8b0d13;
+  color: white;
+}

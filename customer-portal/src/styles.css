@@ -1,0 +1,19 @@
+:root {
+  --primary: #5A0F1C;
+  --secondary: #F5E6D3;
+  --text-dark: #2E2E2E;
+}
+
+body {
+  background-color: var(--secondary);
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.btn-primary {
+  background-color: var(--primary);
+  border: none;
+}
+
+.btn-primary:hover {
+  background-color: #7a1c2a;
+}
