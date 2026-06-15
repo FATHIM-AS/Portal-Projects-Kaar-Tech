@@ -1,0 +1,59 @@
+<div class="page">
+
+  <button class="back-btn" (click)="goBack()">← Back</button>
+
+  <h2>Credit / Debit Memo</h2>
+
+  <div class="filters">
+    <input
+      type="text"
+      placeholder="Search Memo No"
+      [(ngModel)]="memoSearch"
+      (input)="applyFilter()"
+    />
+
+    <select [(ngModel)]="typeFilter" (change)="applyFilter()">
+      <option value="all">All</option>
+      <option value="Credit">Credit</option>
+      <option value="Debit">Debit</option>
+    </select>
+  </div>
+
+  <div *ngIf="loading">Loading memo data...</div>
+
+  <table *ngIf="!loading && filteredList.length > 0">
+
+    <thead>
+      <tr>
+        <th>Memo No</th>
+        <th>Year</th>
+        <th>Date</th>
+        <th>Amount</th>
+        <th>Currency</th>
+        <th>Type</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let item of filteredList">
+
+        <td>{{ item.Belnr }}</td>
+        <td>{{ item.Gjahr }}</td>
+        <td>{{ formatDate(item.Bldat) }}</td>
+        <td>{{ item.Dmbtr }}</td>
+        <td>{{ item.Waers }}</td>
+
+        <td [ngClass]="item.type.toLowerCase()">
+          {{ item.type }}
+        </td>
+
+      </tr>
+    </tbody>
+
+  </table>
+
+  <div *ngIf="!loading && filteredList.length === 0">
+    No memo data available
+  </div>
+
+</div>

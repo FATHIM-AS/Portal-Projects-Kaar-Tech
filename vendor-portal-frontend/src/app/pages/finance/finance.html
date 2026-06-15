@@ -1,0 +1,23 @@
+<div class="page">
+
+  <button class="back-btn" (click)="goBack()">← Back</button>
+
+  <h2>Financial Sheet</h2>
+
+  <div class="cards">
+
+    <div class="card" (click)="goTo('/invoice')">
+      Invoice Details
+    </div>
+
+    <div class="card" (click)="goTo('/aging')">
+      Payments & Aging
+    </div>
+
+    <div class="card" (click)="goTo('/memo')">
+      Credit / Debit Memo
+    </div>
+
+  </div>
+
+</div>

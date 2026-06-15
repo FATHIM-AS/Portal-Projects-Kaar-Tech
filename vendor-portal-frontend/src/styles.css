@@ -1,0 +1,25 @@
+
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f5f5dc; /* beige */
+}
+
+.card {
+  background: white;
+  border-radius: 10px;
+  padding: 20px;
+}
+
+.btn-primary {
+  background-color: #800000; 
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  cursor: pointer;
+}
+
+.btn-primary:hover {
+  opacity: 0.9;
+}

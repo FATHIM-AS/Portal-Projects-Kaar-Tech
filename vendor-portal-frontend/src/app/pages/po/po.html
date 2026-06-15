@@ -1,0 +1,75 @@
+<div class="page">
+
+  <button class="back-btn" (click)="goBack()">← Back</button>
+
+  <h2>Purchase Orders</h2>
+
+  <div class="filters">
+
+    <input
+      type="text"
+      placeholder="Search PO Number"
+      [(ngModel)]="poSearch"
+      (input)="applyFilter()"
+    />
+
+    <input
+      type="text"
+      placeholder="Search Material"
+      [(ngModel)]="materialSearch"
+      (input)="applyFilter()"
+    />
+
+    <select [(ngModel)]="statusFilter" (change)="applyFilter()">
+      <option value="all">All</option>
+      <option value="delivered">Delivered</option>
+      <option value="pending">Pending</option>
+    </select>
+
+  </div>
+
+  <div *ngIf="loading">Loading PO data...</div>
+
+  <table *ngIf="!loading && filteredList.length > 0">
+
+    <thead>
+      <tr>
+        <th>PO No</th>
+        <th>Item</th>
+        <th>Material</th>
+        <th>Description</th>
+        <th>Qty</th>
+        <th>Unit</th>
+        <th>Price</th>
+        <th>Currency</th>
+        <th>PO Date</th>
+        <th>Delivery Date</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let item of filteredList">
+
+        <td>{{ item.Ebeln }}</td>
+        <td>{{ item.Ebelp }}</td>
+        <td>{{ item.Matnr || '-' }}</td>
+        <td>{{ item.Txz01 || '-' }}</td>
+        <td>{{ item.Menge }}</td>
+        <td>{{ item.Meins || '-' }}</td>
+        <td>{{ item.Netpr }}</td>
+        <td>{{ item.Waers }}</td>
+        <td>{{ formatDate(item.Bedat) }}</td>
+        <td>{{ formatDate(item.Eindt) }}</td>
+        <td>{{ getStatus(item.Elikz) }}</td>
+
+      </tr>
+    </tbody>
+
+  </table>
+
+  <div *ngIf="!loading && filteredList.length === 0">
+    No Purchase Orders found
+  </div>
+
+</div>
