@@ -1,0 +1,167 @@
+<div class="page-container">
+
+    <div class="top-section">
+
+        <button
+            class="back-button"
+            (click)="goBack()"
+        >
+            ← Back
+        </button>
+
+        <div class="page-header">
+
+            <h1>
+                Employee Profile
+            </h1>
+
+            <p>
+                View employee personal and organizational details
+            </p>
+
+        </div>
+
+    </div>
+
+    <div
+        class="loading-section"
+        *ngIf="loading"
+    >
+
+        Loading Employee Details...
+
+    </div>
+
+    <div
+        class="error-section"
+        *ngIf="errorMessage"
+    >
+
+        {{ errorMessage }}
+
+    </div>
+
+    <div
+        class="profile-card"
+        *ngIf="employeeData"
+    >
+
+        <div class="profile-banner">
+
+            <div class="profile-avatar">
+
+                {{
+                    employeeData.FirstName
+                    ? employeeData.FirstName.charAt(0)
+                    : 'E'
+                }}
+
+            </div>
+
+            <div class="profile-banner-content">
+
+                <h2>
+                    {{ employeeData.FirstName || '-' }}
+                    {{ employeeData.LastName || '' }}
+                </h2>
+
+                <p>
+                    Employee Id :
+                    {{ employeeData.EmpId }}
+                </p>
+
+            </div>
+
+        </div>
+
+        <div class="details-grid">
+
+            <div class="detail-card">
+
+                <span class="detail-title">
+                    Employee Id
+                </span>
+
+                <span class="detail-value">
+                    {{ employeeData.EmpId || '-' }}
+                </span>
+
+            </div>
+
+            <div class="detail-card">
+
+                <span class="detail-title">
+                    First Name
+                </span>
+
+                <span class="detail-value">
+                    {{ employeeData.FirstName || '-' }}
+                </span>
+
+            </div>
+
+            <div class="detail-card">
+
+                <span class="detail-title">
+                    Last Name
+                </span>
+
+                <span class="detail-value">
+                    {{ employeeData.LastName || '-' }}
+                </span>
+
+            </div>
+
+            <div class="detail-card">
+
+                <span class="detail-title">
+                    Department
+                </span>
+
+                <span class="detail-value">
+                    {{ employeeData.Department || '-' }}
+                </span>
+
+            </div>
+
+            <div class="detail-card">
+
+                <span class="detail-title">
+                    Designation
+                </span>
+
+                <span class="detail-value">
+                    {{ employeeData.Designation || '-' }}
+                </span>
+
+            </div>
+
+            <div class="detail-card">
+
+                <span class="detail-title">
+                    Email
+                </span>
+
+                <span class="detail-value">
+                    {{ employeeData.Email || '-' }}
+                </span>
+
+            </div>
+
+            <div class="detail-card">
+
+                <span class="detail-title">
+                    Phone Number
+                </span>
+
+                <span class="detail-value">
+                    {{ employeeData.Phone || '-' }}
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
