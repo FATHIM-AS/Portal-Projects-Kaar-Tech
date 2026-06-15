@@ -1,0 +1,73 @@
+<div class="page">
+  <button class="back-btn" (click)="goBack()">&#8592; Back</button>
+  <h2>Sales Orders</h2>
+
+  <div class="filter-box">
+
+    <input
+      type="text"
+      [(ngModel)]="searchOrderNo"
+      (input)="applyFilters()"
+      placeholder="Search Sales Order Number..."
+      class="search-input"
+    />
+
+    <input
+      type="text"
+      [(ngModel)]="searchMaterial"
+      (input)="applyFilters()"
+      placeholder="Search Material..."
+      class="search-input"
+    />
+
+    <select [(ngModel)]="selectedStatus" (change)="applyFilters()">
+      <option value="">All Status</option>
+      <option *ngFor="let s of statuses" [value]="s">{{ s }}</option>
+    </select>
+
+    <button (click)="clearFilters()">Clear</button>
+
+  </div>
+
+  <div *ngIf="isLoading" class="loading">
+    Loading sales orders...
+  </div>
+
+  <!-- TABLE -->
+  <div class="table-container" *ngIf="!isLoading">
+
+    <table *ngIf="filteredOrders && filteredOrders.length > 0; else noData">
+
+      <thead>
+        <tr>
+          <th>Sales Order Number</th>
+          <th>Date</th>
+          <th>Material</th>
+          <th>Description</th>
+          <th>Quantity</th>
+          <th>Unit</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let o of filteredOrders">
+          <td>{{ o.orderNo }}</td>
+          <td>{{ o.date || '-' }}</td>
+          <td>{{ o.material || '-' }}</td>
+          <td>{{ o.description || '-' }}</td>
+          <td>{{ o.quantity || '-' }}</td>
+          <td>{{ getUnitFullForm(o.unit) }}</td>
+          <td>{{ o.status || '-' }}</td>
+        </tr>
+      </tbody>
+
+    </table>
+
+    <ng-template #noData>
+      <div class="no-data">No sales orders found</div>
+    </ng-template>
+
+  </div>
+
+</div>

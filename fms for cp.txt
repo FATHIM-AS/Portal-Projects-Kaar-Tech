@@ -1,0 +1,926 @@
+FUNCTION ZFM_SD_CUST_LOGIN_20 .
+
+*"----------------------------------------------------------------------
+
+*"  IMPORTING
+
+*"     VALUE(P_CUST_ID) TYPE  KUNNR
+
+*"     VALUE(P_PASSWORD) TYPE  ZPWD_20_DE
+
+*"  EXPORTING
+
+*"     VALUE(E_STATUS) TYPE  CHAR1
+
+*"     VALUE(E_MESSAGE) TYPE  CHAR255
+
+*"     VALUE(E_NAME) TYPE  CHAR50
+
+*"----------------------------------------------------------------------
+
+
+
+DATA: lv_password TYPE zpwd_20_de,
+
+      lv_kunnr    TYPE kunnr,
+
+      lv_input    TYPE kunnr,
+
+      lv_name     TYPE name1.
+
+
+
+* Convert input
+
+lv_input = p_cust_id.
+
+
+
+CALL FUNCTION 'CONVERSION_EXIT_ALPHA_INPUT'
+
+  EXPORTING input  = lv_input
+
+  IMPORTING output = lv_input.
+
+
+
+* STEP 1: Check KNA1 and get name
+
+SELECT SINGLE kunnr name1
+
+  INTO (lv_kunnr, lv_name)
+
+  FROM kna1
+
+  WHERE kunnr = lv_input.
+
+
+
+IF sy-subrc <> 0.
+
+  e_status = 'E'.
+
+  e_message = 'Customer does not exist'.
+
+  RETURN.
+
+ENDIF.
+
+
+
+e_name = lv_name.
+
+
+
+* STEP 2: Get password (optional check)
+
+SELECT SINGLE wf_password
+
+  INTO lv_password
+
+  FROM zsd_custlogin_20
+
+  WHERE wf_customer_id = lv_input.
+
+
+
+IF sy-subrc <> 0.
+
+  e_status = 'E'.
+
+  e_message = 'Password not maintained'.
+
+  RETURN.
+
+ENDIF.
+
+
+
+* STEP 3: Validate password
+
+IF lv_password = p_password.
+
+  e_status = 'S'.
+
+  e_message = 'Login successful'.
+
+ELSE.
+
+  e_status = 'E'.
+
+  e_message = 'Invalid password'.
+
+ENDIF.
+
+
+
+ENDFUNCTION.
+
+FUNCTION ZFM_SD_CUST_PROFILE_20.
+
+*"----------------------------------------------------------------------
+
+*"*"Local Interface:
+
+*"  IMPORTING
+
+*"     VALUE(P_CUST_ID) TYPE  KNA1-KUNNR
+
+*"  EXPORTING
+
+*"     REFERENCE(E_KUNNR) TYPE  KNA1-KUNNR
+
+*"     REFERENCE(E_NAME1) TYPE  KNA1-NAME1
+
+*"     REFERENCE(E_ORT01) TYPE  KNA1-ORT01
+
+*"     REFERENCE(E_LAND1) TYPE  KNA1-LAND1
+
+*"     REFERENCE(E_TELF1) TYPE  TELF1
+
+*"     REFERENCE(E_STATUS) TYPE  CHAR20
+
+*"----------------------------------------------------------------------
+
+
+
+DATA: LOC_CUST_ID TYPE KUNNR.
+
+
+
+* Step 1: Move input
+
+LOC_CUST_ID = P_CUST_ID.
+
+
+
+* Step 2: Leading zero conversion
+
+CALL FUNCTION 'CONVERSION_EXIT_ALPHA_INPUT'
+
+  EXPORTING
+
+    INPUT  = LOC_CUST_ID
+
+  IMPORTING
+
+    OUTPUT = LOC_CUST_ID.
+
+
+
+* Step 3: Fetch data
+
+SELECT SINGLE KUNNR NAME1 ORT01 LAND1 TELF1
+
+  FROM KNA1
+
+  INTO (E_KUNNR, E_NAME1, E_ORT01, E_LAND1, E_TELF1)
+
+  WHERE KUNNR = LOC_CUST_ID.
+
+
+
+* Step 4: Status
+
+IF SY-SUBRC = 0.
+
+  E_STATUS = 'SUCCESS'.
+
+ELSE.
+
+  E_STATUS = 'CUSTOMER NOT FOUND'.
+
+ENDIF.
+
+
+
+ENDFUNCTION.
+FUNCTION ZFM_SD_ENQUIRY_20.
+
+*"----------------------------------------------------------------------
+
+*"*"Local Interface:
+
+*"  IMPORTING
+
+*"     VALUE(IV_CUSTOMER_ID) TYPE  KUNNR
+
+*"  EXPORTING
+
+*"     VALUE(ET_INQUIRY_LIST) TYPE  ZTT_ENQUIRY20_T
+
+*"     VALUE(E_STATUS) TYPE  CHAR1
+
+*"----------------------------------------------------------------------
+
+DATA: lt_vbak TYPE TABLE OF vbak,
+
+      lt_vbap TYPE TABLE OF vbap,
+
+      ls_vbak TYPE vbak,
+
+      ls_vbap TYPE vbap,
+
+      ls_item TYPE zsd_enquiry20_s,
+
+      lv_req_date TYPE edatu.
+
+CLEAR: et_inquiry_list.
+
+" Step 1: Fetch Inquiry Headers for the Customer (AUART = 'AF' is Inquiry Type)
+
+SELECT * INTO TABLE lt_vbak
+
+  FROM vbak
+
+  WHERE kunnr = iv_customer_id
+
+    AND auart = 'AF'.
+
+IF lt_vbak IS INITIAL.
+
+  RETURN. " No inquiries found
+
+ENDIF.
+
+" Step 2: Loop through each inquiry header
+
+LOOP AT lt_vbak INTO ls_vbak.
+
+  " Step 3: Fetch items for the current inquiry
+
+  SELECT * INTO TABLE lt_vbap
+
+    FROM vbap
+
+    WHERE vbeln = ls_vbak-vbeln.
+
+  LOOP AT lt_vbap INTO ls_vbap.
+
+    CLEAR: ls_item, lv_req_date.
+
+    " Step 4: Fill structure
+
+    ls_item-enquiry_no    = ls_vbak-vbeln.
+
+    ls_item-item_date     = ls_vbak-erdat.
+
+    ls_item-mat_code      = ls_vbap-matnr.
+
+    ls_item-description   = ls_vbap-arktx.
+
+    ls_item-order_qty     = ls_vbap-kwmeng.
+
+    ls_item-unit          = ls_vbap-vrkme.
+
+    ls_item-status        = ls_vbak-gbstk.
+
+    " Step 5: Fetch Requested Delivery Date from VBEP (Schedule Line)
+
+    SELECT SINGLE edatu INTO lv_req_date
+
+      FROM vbep
+
+      WHERE vbeln = ls_vbap-vbeln
+
+        AND posnr = ls_vbap-posnr.
+
+    ls_item-req_del_date = lv_req_date.
+
+    " Step 6: Append to final output table
+
+    APPEND ls_item TO et_inquiry_list.
+
+  ENDLOOP.
+
+ENDLOOP.
+
+
+
+ENDFUNCTION.FUNCTION ZFM_SD_SALESORDER_20.
+
+*"----------------------------------------------------------------------
+
+*"*"Local Interface:
+
+*"  IMPORTING
+
+*"     VALUE(IV_CUSTOMER_ID) TYPE  KUNNR
+
+*"  EXPORTING
+
+*"     VALUE(ET_SALES_ORDER_LIST) TYPE  ZTT_SALESORDER20_T
+
+*"----------------------------------------------------------------------
+
+
+
+  DATA: lt_vbak TYPE TABLE OF vbak,
+
+        lt_vbap TYPE TABLE OF vbap,
+
+        ls_vbak TYPE vbak,
+
+        ls_vbap TYPE vbap,
+
+        ls_item TYPE zsd_salesorder20_s,
+
+        lv_req_date TYPE edatu.
+
+
+
+  CLEAR: et_sales_order_list.
+
+
+
+  TRY.
+
+
+
+    SELECT * FROM vbak INTO TABLE lt_vbak
+
+      WHERE kunnr = iv_customer_id
+
+        AND auart = 'TA'.
+
+
+
+    IF lt_vbak IS INITIAL.
+
+      RETURN.
+
+    ENDIF.
+
+
+
+    LOOP AT lt_vbak INTO ls_vbak.
+
+
+
+      SELECT * INTO TABLE lt_vbap
+
+        FROM vbap
+
+        WHERE vbeln = ls_vbak-vbeln.
+
+
+
+      LOOP AT lt_vbap INTO ls_vbap.
+
+
+
+        CLEAR: ls_item, lv_req_date.
+
+
+
+        ls_item-order_no    = ls_vbak-vbeln.
+
+        ls_item-order_date  = ls_vbak-erdat.
+
+        ls_item-mat_code    = ls_vbap-matnr.
+
+        ls_item-description = ls_vbap-arktx.
+
+        ls_item-order_qty   = ls_vbap-kwmeng * 1.
+
+
+
+        IF ls_vbap-vrkme IS NOT INITIAL.
+
+          ls_item-unit = ls_vbap-vrkme.
+
+        ENDIF.
+
+
+
+        IF ls_vbak-gbstk IS NOT INITIAL.
+
+          ls_item-status = ls_vbak-gbstk.
+
+        ENDIF.
+
+
+
+        SELECT SINGLE edatu INTO lv_req_date
+
+          FROM vbep
+
+          WHERE vbeln = ls_vbap-vbeln
+
+            AND posnr = ls_vbap-posnr.
+
+
+
+        IF sy-subrc = 0.
+
+          ls_item-req_del_date = lv_req_date.
+
+        ENDIF.
+
+
+
+        IF ls_item-order_no IS NOT INITIAL.
+
+          APPEND ls_item TO et_sales_order_list.
+
+        ENDIF.
+
+
+
+      ENDLOOP.
+
+
+
+    ENDLOOP.
+
+
+
+  CATCH cx_root INTO DATA(lx_error).
+
+    CLEAR et_sales_order_list.
+
+  ENDTRY.
+
+
+
+ENDFUNCTION.FUNCTION zfm_sd_delivery_20.
+
+*"----------------------------------------------------------------------
+
+*"*"Local Interface:
+
+*"  IMPORTING
+
+*"     VALUE(IV_KUNNR) TYPE  KUNNR
+
+*"  EXPORTING
+
+*"     VALUE(ET_DELIVERY) TYPE  ZTT_DELIVERY20_T
+
+*"----------------------------------------------------------------------
+
+
+
+  " Clear output table
+
+  CLEAR et_delivery.
+
+
+
+  " Fetch delivery details
+
+  SELECT
+
+    ld~vbeln,     " Delivery Number
+
+    ld~erdat,     " Created Date
+
+    ld~wadat,     " Goods Issue Date
+
+    li~lgort,     " Storage Location
+
+    ld~vstel      " Shipping Point
+
+  FROM likp AS ld
+
+  INNER JOIN lips AS li
+
+    ON li~vbeln = ld~vbeln
+
+  INNER JOIN vbpa AS vp
+
+    ON vp~vbeln = ld~vbeln
+
+  INTO CORRESPONDING FIELDS OF TABLE @et_delivery
+
+  WHERE vp~kunnr = @iv_kunnr
+
+    AND vp~parvw = 'WE'   " Ship-to party
+
+  ORDER BY ld~erdat DESCENDING.
+
+
+
+  " Optional handling if no data found
+
+  IF sy-subrc <> 0.
+
+    CLEAR et_delivery.
+
+  ENDIF.
+
+
+
+ENDFUNCTION.FUNCTION zfm_fi_finance_20.
+
+*"----------------------------------------------------------------------
+
+*"*"Local Interface:
+
+*"  IMPORTING
+
+*"     VALUE(IV_KUNNR) TYPE  KUNNR
+
+*"  EXPORTING
+
+*"     VALUE(E_STATUS) TYPE  CHAR1
+
+*"     VALUE(E_MESSAGE) TYPE  CHAR255
+
+*"     VALUE(T_AGING) TYPE  ZTT_AGING20_T
+
+*"     VALUE(T_CREDITDEBIT) TYPE  ZTT_CREDITDEBIT20_T
+
+*"     VALUE(T_SALES_SUM) TYPE  ZTT_SALESSUM20_T
+
+*"     VALUE(T_INVOICE) TYPE  ZTT_INVOICE20_T
+
+*"----------------------------------------------------------------------
+
+
+
+  DATA: lv_kunnr TYPE kna1-kunnr,
+
+        lv_total TYPE netwr.
+
+
+
+  DATA: ls_invoice  TYPE zsd_invoice20_s,
+
+        ls_aging    TYPE zsd_aging20_s,
+
+        ls_credit   TYPE zsd_creditdebit20_s,
+
+        ls_salessum TYPE zsd_salessum20_s.
+
+
+
+  DATA: lt_vbrk TYPE TABLE OF vbrk,
+
+        ls_vbrk TYPE vbrk.
+
+
+
+  DATA: lt_bsid TYPE TABLE OF bsid,
+
+        ls_bsid TYPE bsid.
+
+
+
+*---------------------------------------------------------------------*
+
+* Clear Output
+
+*---------------------------------------------------------------------*
+
+  CLEAR: t_invoice, t_aging, t_creditdebit, t_sales_sum,
+
+         e_status, e_message.
+
+
+
+*---------------------------------------------------------------------*
+
+* Validate Input
+
+*---------------------------------------------------------------------*
+
+  IF iv_kunnr IS INITIAL.
+
+    e_status  = 'E'.
+
+    e_message = 'Customer ID is empty'.
+
+    RETURN.
+
+  ENDIF.
+
+
+
+*---------------------------------------------------------------------*
+
+* Convert Customer Number (ALPHA)
+
+*---------------------------------------------------------------------*
+
+  lv_kunnr = iv_kunnr.
+
+
+
+  CALL FUNCTION 'CONVERSION_EXIT_ALPHA_INPUT'
+
+    EXPORTING
+
+      input  = lv_kunnr
+
+    IMPORTING
+
+      output = lv_kunnr.
+
+
+
+*---------------------------------------------------------------------*
+
+* Invoice Data (VBRK)
+
+*---------------------------------------------------------------------*
+
+  SELECT vbeln, fkdat, netwr, waerk
+
+    INTO CORRESPONDING FIELDS OF TABLE @lt_vbrk
+
+    FROM vbrk
+
+    WHERE kunag = @lv_kunnr.
+
+
+
+  LOOP AT lt_vbrk INTO ls_vbrk.
+
+
+
+    CLEAR ls_invoice.
+
+
+
+    ls_invoice-vbeln = ls_vbrk-vbeln.
+
+    ls_invoice-fkdat = ls_vbrk-fkdat.
+
+    ls_invoice-netwr = ls_vbrk-netwr.
+
+    ls_invoice-waerk = ls_vbrk-waerk.
+
+
+
+    APPEND ls_invoice TO t_invoice.
+
+
+
+  ENDLOOP.
+
+
+
+*---------------------------------------------------------------------*
+
+* Aging Calculation
+
+*---------------------------------------------------------------------*
+
+  LOOP AT lt_vbrk INTO ls_vbrk.
+
+
+
+    CLEAR ls_aging.
+
+
+
+    ls_aging-vbeln = ls_vbrk-vbeln.
+
+    ls_aging-fkdat = ls_vbrk-fkdat.
+
+    ls_aging-netwr = ls_vbrk-netwr.
+
+    ls_aging-waerk = ls_vbrk-waerk.
+
+    ls_aging-aging_days = sy-datum - ls_vbrk-fkdat.
+
+
+
+    APPEND ls_aging TO t_aging.
+
+
+
+  ENDLOOP.
+
+
+
+*---------------------------------------------------------------------*
+
+* Credit / Debit (BSID)
+
+*---------------------------------------------------------------------*
+
+  SELECT belnr, budat, wrbtr, shkzg
+
+    INTO CORRESPONDING FIELDS OF TABLE @lt_bsid
+
+    FROM bsid
+
+    WHERE kunnr = @lv_kunnr.
+
+
+
+  LOOP AT lt_bsid INTO ls_bsid.
+
+
+
+    CLEAR ls_credit.
+
+
+
+    ls_credit-belnr = ls_bsid-belnr.
+
+    ls_credit-budat = ls_bsid-budat.
+
+    ls_credit-wrbtr = ls_bsid-wrbtr.
+
+    ls_credit-shkzg = ls_bsid-shkzg.
+
+
+
+    APPEND ls_credit TO t_creditdebit.
+
+
+
+  ENDLOOP.
+
+
+
+*---------------------------------------------------------------------*
+
+* Sales Summary
+
+*---------------------------------------------------------------------*
+
+  SELECT SUM( netwr )
+
+    INTO @lv_total
+
+    FROM vbrk
+
+    WHERE kunag = @lv_kunnr.
+
+
+
+  CLEAR ls_salessum.
+
+
+
+  ls_salessum-total_amount = lv_total.
+
+
+
+  APPEND ls_salessum TO t_sales_sum.
+
+
+
+*---------------------------------------------------------------------*
+
+* Final Status
+
+*---------------------------------------------------------------------*
+
+  IF t_invoice IS NOT INITIAL OR t_creditdebit IS NOT INITIAL.
+
+    e_status  = 'S'.
+
+    e_message = 'Finance data fetched successfully'.
+
+  ELSE.
+
+    e_status  = 'E'.
+
+    e_message = 'No finance data found'.
+
+  ENDIF.
+
+
+
+ENDFUNCTION.FUNCTION ZFM_GETINVOICEPDF_20.
+
+
+
+*"----------------------------------------------------------------------
+
+*"  IMPORTING
+
+*"     VALUE(IV_VBELN) TYPE VBELN
+
+*"  EXPORTING
+
+*"     VALUE(EV_PDF) TYPE XSTRING
+
+*"     VALUE(E_STATUS) TYPE CHAR1
+
+*"     VALUE(E_MESSAGE) TYPE CHAR255
+
+*"----------------------------------------------------------------------
+
+
+
+  DATA: lv_form TYPE fpformoutput,
+
+        lv_vbeln TYPE vbeln.
+
+
+
+*---------------------------------------------------------------------*
+
+* Clear Output
+
+*---------------------------------------------------------------------*
+
+  CLEAR: ev_pdf, e_status, e_message.
+
+
+
+*---------------------------------------------------------------------*
+
+* Validate Input
+
+*---------------------------------------------------------------------*
+
+  IF iv_vbeln IS INITIAL.
+
+    e_status  = 'E'.
+
+    e_message = 'Invoice number is empty'.
+
+    RETURN.
+
+  ENDIF.
+
+
+
+*---------------------------------------------------------------------*
+
+* Convert VBELN (ALPHA)
+
+*---------------------------------------------------------------------*
+
+  lv_vbeln = iv_vbeln.
+
+
+
+  CALL FUNCTION 'CONVERSION_EXIT_ALPHA_INPUT'
+
+    EXPORTING
+
+      input  = lv_vbeln
+
+    IMPORTING
+
+      output = lv_vbeln.
+
+
+
+*---------------------------------------------------------------------*
+
+* Call Driver Program (Adobe handled there)
+
+*---------------------------------------------------------------------*
+
+  SUBMIT Z63_INV_PRGM
+
+    WITH p_vbeln = lv_vbeln
+
+    AND RETURN.
+
+
+
+*---------------------------------------------------------------------*
+
+* Get PDF from Memory
+
+*---------------------------------------------------------------------*
+
+  IMPORT lv_form TO lv_form FROM MEMORY ID 'C_MEMORY'.
+
+
+
+*---------------------------------------------------------------------*
+
+* Validate Output
+
+*---------------------------------------------------------------------*
+
+  IF lv_form IS INITIAL OR lv_form-pdf IS INITIAL.
+
+    e_status  = 'E'.
+
+    e_message = 'No PDF returned by Adobe form'.
+
+    RETURN.
+
+  ENDIF.
+
+
+
+*---------------------------------------------------------------------*
+
+* Return XSTRING directly
+
+*---------------------------------------------------------------------*
+
+  ev_pdf = lv_form-pdf.
+
+
+
+  e_status  = 'S'.
+
+  e_message = 'PDF fetched successfully'.
+
+
+
+ENDFUNCTION.

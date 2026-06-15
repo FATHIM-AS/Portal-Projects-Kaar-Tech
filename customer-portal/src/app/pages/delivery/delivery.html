@@ -1,0 +1,50 @@
+<div class="page">
+
+  <button class="back-btn" (click)="goBack()">&#8592; Back</button>
+
+  <h2>Deliveries</h2>
+
+  <div class="filter-box">
+
+    <input
+      type="text"
+      [(ngModel)]="searchDelivery"
+      (input)="applyFilters()"
+      placeholder="Search Delivery Number..."
+      class="search-input"
+    />
+
+    <select [(ngModel)]="selectedShippingPoint" (change)="applyFilters()">
+      <option value="">All Shipping Point</option>
+      <option *ngFor="let sp of shippingPoints" [value]="sp">{{ sp }}</option>
+    </select>
+
+    <button (click)="clearFilters()">Clear</button>
+
+  </div>
+
+  <div class="table-box">
+    <table>
+      <thead>
+        <tr>
+          <th>Delivery Number</th>
+          <th>Created Date</th>
+          <th>Delivery Date</th>
+          <th>Storage Location</th>
+          <th>Shipping Point</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let d of filteredDeliveries">
+          <td>{{ d.deliveryNumber }}</td>
+          <td>{{ d.createdDate }}</td>
+          <td>{{ d.deliveryDate }}</td>
+          <td>{{ d.storageLocation }}</td>
+          <td>{{ d.shippingPoint }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>

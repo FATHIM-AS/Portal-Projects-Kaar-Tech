@@ -1,0 +1,26 @@
+<div class="profile-container">
+
+  <div class="profile-circle" (click)="toggleDropdown()">
+    {{ profileInitial }}
+  </div>
+
+  <div class="dropdown" *ngIf="showDropdown">
+
+    <div class="header">
+      {{ profile.name || 'Customer' }}
+    </div>
+
+    <div class="info-grid">
+
+      <div class="info-row" *ngFor="let f of fields">
+        <span class="label">{{ f.label }}</span>
+        <span class="value">{{ f.value }}</span>
+      </div>
+
+    </div>
+
+    <button class="logout-btn" (click)="logout()">Logout</button>
+
+  </div>
+
+</div>
