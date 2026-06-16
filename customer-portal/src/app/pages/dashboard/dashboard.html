@@ -1,0 +1,42 @@
+<div class="dashboard">
+
+  <div class="top-bar">
+
+    <h3>Welcome, {{ customerName }}</h3>
+
+    <div class="right-section">
+
+      <app-profile></app-profile>
+
+    </div>
+  </div>
+
+  <div class="card-grid">
+
+    <div class="card-box" routerLink="/inquiry">
+      <h5>Inquiries</h5>
+      <p>View all customer inquiries</p>
+      <button>View</button>
+    </div>
+
+    <div class="card-box" routerLink="/sales-order">
+      <h5>Sales Orders</h5>
+      <p>Track your orders</p>
+      <button>View</button>
+    </div>
+
+    <div class="card-box" routerLink="/delivery">
+      <h5>Deliveries</h5>
+      <p>Check delivery status</p>
+      <button>View</button>
+    </div>
+
+    <div class="card-box" routerLink="/finance">
+      <h5>Financial Sheet</h5>
+      <p>Invoices, payments, aging</p>
+      <button>View</button>
+    </div>
+
+  </div>
+
+</div>

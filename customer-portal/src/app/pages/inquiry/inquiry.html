@@ -1,0 +1,83 @@
+<div class="page">
+<button class="back-btn" (click)="goBack()">&#8592; Back</button>
+  <h2>Customer Inquiries</h2>
+
+  <div class="filter-box">
+
+    <input
+      type="text"
+      [(ngModel)]="searchInquiryNumber"
+      (input)="applyFilters()"
+      placeholder="Search Inquiry Number..."
+      class="search-input"
+    />
+
+    <select [(ngModel)]="selectedStatus" (change)="applyFilters()">
+      <option value="ALL">All Status</option>
+      <option *ngFor="let s of statuses" [value]="s">
+        {{ getStatusText(s) }}
+      </option>
+    </select>
+
+    <button (click)="clearFilters()">Clear</button>
+
+  </div>
+
+  <div class="table-container">
+
+    <div *ngIf="loading" class="loading">
+      Loading inquiries...
+    </div>
+
+    <table *ngIf="!loading && filteredInquiries && filteredInquiries.length > 0">
+
+      <thead>
+        <tr>
+          <th>Inquiry Number</th>
+          <th>Date</th>
+          <th>Material</th>
+          <th>Description</th>
+          <th>Quantity</th>
+          <th>Unit</th>
+          <th>Status</th>
+          <th>Requested Delivery Date</th>
+        </tr>
+      </thead>
+
+      <tbody>
+
+        <tr *ngFor="let i of filteredInquiries">
+
+          <td>{{ i.inquiryNumber }}</td>
+
+          <td>{{ formatDate(i.date) }}</td>
+
+          <td>{{ i.material }}</td>
+
+          <td>{{ i.description }}</td>
+
+          <td>{{ i.quantity }}</td>
+
+          <td>{{ getUnitFullForm(i.unit) }}</td>
+
+          <td>
+            <span class="status-badge" [ngClass]="i.status">
+              {{ getStatusText(i.status) }}
+            </span>
+          </td>
+
+          <td>{{ formatDate(i.deliveryDate) }}</td>
+
+        </tr>
+
+      </tbody>
+
+    </table>
+
+    <div *ngIf="!loading && filteredInquiries && filteredInquiries.length === 0" class="no-data">
+      No inquiries found
+    </div>
+
+  </div>
+
+</div>

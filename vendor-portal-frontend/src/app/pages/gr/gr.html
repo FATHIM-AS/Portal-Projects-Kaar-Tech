@@ -1,0 +1,72 @@
+<div class="page">
+
+  <button class="back-btn" (click)="goBack()">← Back</button>
+
+  <h2>Goods Receipt</h2>
+
+  <div class="filters">
+
+    <input
+      type="text"
+      placeholder="Search GR Number"
+      [(ngModel)]="grSearch"
+      (input)="applyFilter()"
+    />
+
+    <input
+      type="text"
+      placeholder="Search PO Number"
+      [(ngModel)]="poSearch"
+      (input)="applyFilter()"
+    />
+
+    <input
+      type="text"
+      placeholder="Search Material"
+      [(ngModel)]="materialSearch"
+      (input)="applyFilter()"
+    />
+
+  </div>
+
+  <div *ngIf="loading">Loading GR data...</div>
+
+  <table *ngIf="!loading && filteredList.length > 0">
+
+    <thead>
+      <tr>
+        <th>GR No</th>
+        <th>Year</th>
+        <th>PO No</th>
+        <th>Item</th>
+        <th>Material</th>
+        <th>Quantity</th>
+        <th>Unit</th>
+        <th>Posting Date</th>
+        <th>Plant</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let item of filteredList">
+
+        <td>{{ item.Mblnr }}</td>
+        <td>{{ item.Mjahr }}</td>
+        <td>{{ item.Ebeln }}</td>
+        <td>{{ item.Ebelp }}</td>
+        <td>{{ item.Matnr }}</td>
+        <td>{{ item.Erfmg }}</td>
+        <td>{{ item.Erfme }}</td>
+        <td>{{ formatDate(item.Budat) }}</td>
+        <td>{{ item.Werks }}</td>
+
+      </tr>
+    </tbody>
+
+  </table>
+
+  <div *ngIf="!loading && filteredList.length === 0">
+    No GR data available
+  </div>
+
+</div>

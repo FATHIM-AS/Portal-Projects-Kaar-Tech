@@ -1,0 +1,36 @@
+<div class="dashboard">
+
+  <div class="top-bar">
+    <h1>Welcome, {{ vendorName }}</h1>
+
+    <div class="profile-box" (click)="toggleMenu()">
+      <div class="circle">U</div>
+
+      <div class="dropdown" *ngIf="showMenu">
+        <p (click)="goProfile()">My Account</p>
+        <p (click)="logout()">Logout</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card-container">
+
+    <div class="card" (click)="goRFQ()">
+      Request for Quotation
+    </div>
+
+    <div class="card" (click)="goPO()">
+      Purchase Order
+    </div>
+
+    <div class="card" (click)="goGR()">
+      Goods Receipt
+    </div>
+
+    <div class="card" (click)="goFinance()">
+      Financial Sheet
+    </div>
+
+  </div>
+
+</div>

@@ -1,0 +1,66 @@
+<div class="page">
+
+  <button class="back-btn" (click)="goBack()">← Back</button>
+
+  <h2>Request for Quotation</h2>
+
+  <div class="filters">
+
+    <input
+      type="text"
+      placeholder="Search RFQ No"
+      [(ngModel)]="rfqSearch"
+      (input)="applyFilter()"
+    />
+
+    <input
+      type="text"
+      placeholder="Search Material"
+      [(ngModel)]="materialSearch"
+      (input)="applyFilter()"
+    />
+
+    <select [(ngModel)]="statusFilter" (change)="applyFilter()">
+      <option value="all">All</option>
+      <option value="open">Open</option>
+      <option value="closed">Closed</option>
+    </select>
+
+  </div>
+  <div *ngIf="loading">Loading RFQ data...</div>
+
+  <table *ngIf="!loading && filteredList.length > 0">
+
+    <thead>
+      <tr>
+        <th>RFQ No</th>
+        <th>Material</th>
+        <th>Description</th>
+        <th>Quantity</th>
+        <th>Unit</th>
+        <th>Quotation Date</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let item of filteredList">
+
+        <td>{{ item.Anfnr }}</td>
+        <td>{{ item.Matnr }}</td>
+        <td>{{ item.Txz01 }}</td>
+        <td>{{ item.Menge }}</td>
+        <td>{{ item.Meins }}</td>
+        <td>{{ formatDate(item.Angdt) }}</td>
+        <td>{{ item.Status }}</td>
+
+      </tr>
+    </tbody>
+
+  </table>
+
+  <div *ngIf="!loading && filteredList.length === 0">
+    No RFQ data available
+  </div>
+
+</div>

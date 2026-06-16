@@ -1,0 +1,42 @@
+<div class="login-page">
+  <div class="login-card">
+
+    <div class="header">
+      <div class="logo">K</div>
+      <div class="title">
+        <strong>Kaar Technologies</strong>
+        <span>Vendor Portal</span>
+      </div>
+    </div>
+
+    <h2>Sign In</h2>
+
+    <div class="error-box" *ngIf="error">
+       {{ error }}
+    </div>
+
+<label>Vendor ID</label>
+<input
+  type="text"
+  (input)="onVendorChange($event)"
+  placeholder="Enter Vendor ID"
+/>
+
+<label>Password</label>
+<div class="password-box">
+  <input
+    [type]="showPassword ? 'text' : 'password'"
+    (input)="onPasswordChange($event)"
+    placeholder="Enter Password"
+  />
+  <span (click)="togglePassword()">👁</span>
+</div>
+
+    <button type="button" class="login-btn" (click)="login()">
+      Sign In →
+    </button>
+
+    <p class="footer">Kaar Technologies © 2026</p>
+
+  </div>
+</div>
