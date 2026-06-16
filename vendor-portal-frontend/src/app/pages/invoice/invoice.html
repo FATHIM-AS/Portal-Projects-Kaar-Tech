@@ -1,0 +1,74 @@
+<div class="page">
+
+  <button class="back-btn" (click)="goBack()">← Back</button>
+
+  <h2 class="title">Invoice Details</h2>
+
+  <div class="filters">
+    <input
+      type="text"
+      placeholder="Search Invoice No"
+      [(ngModel)]="searchText"
+    />
+  </div>
+
+  <p *ngIf="loading">Loading invoice data...</p>
+
+  <p *ngIf="!loading && invoices.length === 0">
+    No invoices available
+  </p>
+  <table *ngIf="!loading && invoices.length > 0">
+
+    <thead>
+      <tr>
+        <th>Invoice No</th>
+
+        <th *ngIf="showYear">Year</th>
+
+        <th>Date</th>
+
+        <th *ngIf="showDueDate">Due Date</th>
+
+        <th *ngIf="showAmount">Amount</th>
+
+        <th>Currency</th>
+
+        <th *ngIf="showAging">Aging</th>
+
+        <th *ngIf="showStatus">Status</th>
+
+        <th>PDF</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let inv of filteredInvoices">
+
+        <td>{{ inv.Belnr }}</td>
+
+        <td *ngIf="showYear">{{ inv.Gjahr }}</td>
+
+        <td>{{ inv.Bldat }}</td>
+
+        <td *ngIf="showDueDate">{{ inv.Zfbdt }}</td>
+
+        <td *ngIf="showAmount">₹ {{ inv.Amount }}</td>
+
+        <td>{{ inv.Waers }}</td>
+
+        <td *ngIf="showAging">{{ inv.AgingDays }}</td>
+
+        <td *ngIf="showStatus">{{ inv.Status }}</td>
+
+        <td>
+          <button class="pdf-btn" (click)="viewPdf(inv.Belnr)">
+            View PDF
+          </button>
+        </td>
+
+      </tr>
+    </tbody>
+
+  </table>
+
+</div>

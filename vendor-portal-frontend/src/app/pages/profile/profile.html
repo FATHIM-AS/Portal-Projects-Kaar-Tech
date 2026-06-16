@@ -1,0 +1,47 @@
+<div class="page">
+
+  <button class="back-btn" (click)="goBack()">← Back</button>
+
+  <h2 class="title">Vendor Profile</h2>
+
+  <p *ngIf="loading">Loading profile...</p>
+
+  <p *ngIf="!loading && !profile.vendorId">
+    No profile data available
+  </p>
+
+  <div class="profile-card" *ngIf="!loading && profile.vendorId">
+
+    <div class="row">
+      <label>Vendor ID</label>
+      <span>{{ profile.vendorId }}</span>
+    </div>
+
+    <div class="row">
+      <label>Name</label>
+      <span>{{ profile.name }}</span>
+    </div>
+
+    <div class="row">
+      <label>Address</label>
+      <span>{{ profile.address }}</span>
+    </div>
+
+    <div class="row">
+      <label>City</label>
+      <span>{{ profile.city }}</span>
+    </div>
+
+    <div class="row">
+      <label>Postal Code</label>
+      <span>{{ profile.postal }}</span>
+    </div>
+
+    <div class="row">
+      <label>Country</label>
+      <span>{{ profile.country }}</span>
+    </div>
+
+  </div>
+
+</div>

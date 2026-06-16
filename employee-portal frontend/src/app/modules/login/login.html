@@ -1,0 +1,83 @@
+<div class="login-page">
+
+    <div class="background-glow glow-1"></div>
+
+    <div class="background-glow glow-2"></div>
+
+    <div class="login-wrapper">
+
+        <div class="login-card">
+
+            <div class="top-badge">
+                EMPLOYEE PORTAL
+            </div>
+
+            <h1 class="login-title">
+                Welcome Back
+            </h1>
+
+            <p class="login-subtitle">
+                Sign in to continue to your employee workspace
+            </p>
+
+            <div
+                *ngIf="successMessage"
+                class="success-message"
+            >
+                {{ successMessage }}
+            </div>
+
+            <div
+                *ngIf="errorMessage"
+                class="error-message"
+            >
+                {{ errorMessage }}
+            </div>
+
+            <div class="input-group">
+
+                <label>
+                    Employee ID
+                </label>
+
+                <input
+                    type="text"
+                    placeholder="Enter Employee ID"
+                    [(ngModel)]="employeeId"
+                >
+
+            </div>
+
+            <div class="input-group">
+
+                <label>
+                    Password
+                </label>
+
+                <input
+                    type="password"
+                    placeholder="Enter Password"
+                    [(ngModel)]="password"
+                >
+
+            </div>
+
+            <button
+                class="login-btn"
+                (click)="login()"
+                [disabled]="loading"
+            >
+
+                {{
+                    loading
+                    ? 'Signing In...'
+                    : 'Sign In'
+                }}
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>

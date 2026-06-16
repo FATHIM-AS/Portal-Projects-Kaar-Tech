@@ -1,0 +1,171 @@
+<div class="leave-page">
+
+    <div class="top-section">
+
+        <div>
+
+            <button
+                class="back-btn"
+                (click)="goBack()"
+            >
+                ← Back
+            </button>
+
+            <h1 class="page-title">
+                Leave Management
+            </h1>
+
+            <p class="page-subtitle">
+                Employee leave records, balances and absence details
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="filter-bar">
+
+        <div class="filter-left">
+
+            <label>
+                Leave Type
+            </label>
+
+            <select
+                [(ngModel)]="selectedLeaveType"
+                (change)="applyFilters()"
+                class="leave-filter"
+            >
+
+                <option value="">
+                    All Leave Types
+                </option>
+
+                <option
+                    *ngFor="
+                        let leaveType of uniqueLeaveTypes
+                    "
+                    [value]="leaveType"
+                >
+                    {{ leaveType }}
+                </option>
+
+            </select>
+
+        </div>
+
+        <button
+            class="reset-btn"
+            (click)="clearFilters()"
+        >
+            Reset
+        </button>
+
+    </div>
+
+    <div
+        *ngIf="loading"
+        class="state-card"
+    >
+        Loading leave records...
+    </div>
+
+    <div
+        *ngIf="errorMessage"
+        class="state-card error-card"
+    >
+        {{ errorMessage }}
+    </div>
+
+    <div
+        *ngIf="filteredLeaveData.length > 0"
+        class="leave-card"
+    >
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>Employee ID</th>
+
+                        <th>Leave Type</th>
+
+                        <th>From Date</th>
+
+                        <th>To Date</th>
+
+                        <th>Leave Days</th>
+
+                        <th>Absence Days</th>
+
+                        <th>Balance</th>
+
+                        <th>Deduction Days</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    <tr
+                        *ngFor="
+                            let leave of filteredLeaveData
+                        "
+                    >
+
+                        <td class="emp-id">
+                            {{ leave.EmpId }}
+                        </td>
+
+                        <td class="leave-type">
+                            {{ leave.LeaveType }}
+                        </td>
+
+                        <td>
+                            {{
+                                formatDate(
+                                    leave.FromDate
+                                )
+                            }}
+                        </td>
+
+                        <td>
+                            {{
+                                formatDate(
+                                    leave.ToDate
+                                )
+                            }}
+                        </td>
+
+                        <td>
+                            {{ leave.NoOfDays }}
+                        </td>
+
+                        <td>
+                            {{ leave.AbsenceDays }}
+                        </td>
+
+                        <td class="balance">
+                            {{ leave.TimeQuota }}
+                        </td>
+
+                        <td>
+                            {{ leave.DeductionDays }}
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>

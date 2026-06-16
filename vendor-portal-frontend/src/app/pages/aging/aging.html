@@ -1,0 +1,45 @@
+<div class="page">
+
+  <button class="back-btn" (click)="goBack()">← Back</button>
+
+  <h2>Payments & Aging</h2>
+
+  <div *ngIf="loading">Loading aging data...</div>
+
+  <div class="summary" *ngIf="!loading">
+    Total Amount: ₹ {{ getTotal() }}
+  </div>
+
+  <table *ngIf="!loading && agingList.length > 0">
+
+    <thead>
+      <tr>
+        <th>Invoice No</th>
+        <th>Amount</th>
+        <th>Currency</th>
+        <th>Aging Days</th>
+        <th>Bucket</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let item of agingList">
+
+        <td>{{ item.Belnr }}</td>
+        <td>{{ item.Dmbtr }}</td>
+        <td>{{ item.Waers }}</td>
+        <td>{{ item.AgingDays }}</td>
+
+<td [ngClass]="getBucketClass(item.bucket)">          {{ item.bucket }}
+        </td>
+
+      </tr>
+    </tbody>
+
+  </table>
+
+  <div *ngIf="!loading && agingList.length === 0">
+    No aging data available
+  </div>
+
+</div>

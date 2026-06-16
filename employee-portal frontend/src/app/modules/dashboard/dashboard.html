@@ -1,0 +1,75 @@
+<div class="dashboard-page">
+
+    <div class="dashboard-topbar">
+
+        <div>
+
+            <h1 class="dashboard-title">
+                Employee Dashboard
+            </h1>
+
+            <p class="dashboard-subtitle">
+                Human Resource Management Portal
+            </p>
+
+        </div>
+
+        <button
+            class="logout-button"
+            (click)="logout()"
+        >
+            Logout
+        </button>
+
+    </div>
+
+    <div class="dashboard-grid">
+
+        <div
+            class="dashboard-card"
+            (click)="navigate('profile')"
+        >
+
+            <div class="card-header">
+                Employee Profile
+            </div>
+
+            <div class="card-description">
+                View employee information and details
+            </div>
+
+        </div>
+
+        <div
+            class="dashboard-card"
+            (click)="navigate('leave')"
+        >
+
+            <div class="card-header">
+                Leave Management
+            </div>
+
+            <div class="card-description">
+                Track leave requests and status
+            </div>
+
+        </div>
+
+        <div
+            class="dashboard-card"
+            (click)="navigate('payslip')"
+        >
+
+            <div class="card-header">
+                Payslip
+            </div>
+
+            <div class="card-description">
+                Access salary and payslip information
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

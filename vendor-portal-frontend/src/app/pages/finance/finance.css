@@ -1,0 +1,43 @@
+.page {
+  padding: 20px;
+  background: #f5f1dc;
+  min-height: 100vh;
+}
+
+.back-btn {
+  background: #7a0000;
+  color: white;
+  padding: 8px 15px;
+  border: none;
+  border-radius: 6px;
+  margin-bottom: 20px;
+}
+
+h2 {
+  color: #7a0000;
+  margin-bottom: 25px;
+}
+
+.cards {
+  display: flex;
+  gap: 25px;
+  flex-wrap: wrap;
+}
+
+.card {
+  background: #e8e8e8;
+  padding: 30px;
+  border-radius: 15px;
+  width: 250px;
+  text-align: center;
+  font-weight: bold;
+  color: #7a0000;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  background: #ffffff;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+}

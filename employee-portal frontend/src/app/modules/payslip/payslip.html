@@ -1,0 +1,255 @@
+<div class="payslip-page">
+
+    <div class="page-header">
+
+        <div>
+
+            <button
+                class="back-btn"
+                (click)="goBack()"
+            >
+                ← Back
+            </button>
+
+            <h1 class="page-title">
+                Payslip Portal
+            </h1>
+
+            <p class="page-subtitle">
+                Employee payroll documents and payslip history
+            </p>
+
+        </div>
+
+        <div class="period-box">
+            {{ selectedMonth }}/{{ selectedYear }}
+        </div>
+
+    </div>
+
+    <div
+        *ngIf="loading"
+        class="status-card"
+    >
+        Loading payslip...
+    </div>
+
+    <div
+        *ngIf="errorMessage"
+        class="status-card error-card"
+    >
+        {{ errorMessage }}
+    </div>
+
+    <div
+        *ngIf="payslipData"
+        class="main-layout"
+    >
+
+        <div class="employee-card">
+
+            <div class="employee-top">
+
+                <div>
+
+                    <h2>
+                        {{ payslipData.EmpName }}
+                    </h2>
+
+                    <p>
+                        {{ payslipData.Designation }}
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="employee-details">
+
+                <div class="detail-row">
+                    <span>Employee ID</span>
+                    <strong>{{ payslipData.EmpId }}</strong>
+                </div>
+
+                <div class="detail-row">
+                    <span>Department</span>
+                    <strong>{{ payslipData.Department }}</strong>
+                </div>
+
+                <div class="detail-row">
+                    <span>Currency</span>
+                    <strong>{{ payslipData.Currency }}</strong>
+                </div>
+                <div class="detail-row netpay-row">
+    <span>Net Pay</span>
+
+    <strong class="netpay-text">
+        {{ payslipData.Currency }}
+        {{ payslipData.NetPay }}
+    </strong>
+</div>
+
+            </div>
+
+        </div>
+
+        <div class="action-card">
+
+            <div class="action-header">
+
+                <h2>
+                    Payslip Actions
+                </h2>
+
+            </div>
+
+            <div class="filter-row">
+
+                <select
+                    [(ngModel)]="selectedMonth"
+                    class="control"
+                >
+
+                    <option value="01">January</option>
+                    <option value="02">February</option>
+                    <option value="03">March</option>
+                    <option value="04">April</option>
+                    <option value="05">May</option>
+                    <option value="06">June</option>
+                    <option value="07">July</option>
+                    <option value="08">August</option>
+                    <option value="09">September</option>
+                    <option value="10">October</option>
+                    <option value="11">November</option>
+                    <option value="12">December</option>
+
+                </select>
+
+                <input
+                    type="number"
+                    [(ngModel)]="selectedYear"
+                    class="control"
+                    placeholder="Year"
+                />
+
+                <button
+                    class="load-btn"
+                    (click)="loadSelectedPayslip()"
+                >
+                    Load
+                </button>
+
+            </div>
+
+            <div class="button-grid">
+
+                <button
+                    class="action-btn"
+                    (click)="viewPdf()"
+                >
+                    View
+                </button>
+
+                <button
+                    class="action-btn"
+                    (click)="downloadPdf()"
+                >
+                    Download
+                </button>
+
+                <button
+                    class="action-btn"
+                    (click)="printPayslip()"
+                >
+                    Print
+                </button>
+
+                <button
+                    class="action-btn"
+                    (click)="mailPayslip()"
+                >
+                    Mail
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="history-section">
+
+        <div class="history-header">
+
+            <div>
+
+                <p class="history-tag">
+                    HISTORY
+                </p>
+
+                <h2 class="history-title">
+                    Previous Payslips
+                </h2>
+
+            </div>
+
+        </div>
+
+        <div class="history-list">
+
+            <div
+                class="history-item"
+                *ngFor="let item of filteredPayslips"
+            >
+
+                <div class="history-info">
+
+                    <h3>
+                        {{ item.PayMonth }}/{{ item.PayYear }}
+                    </h3>
+
+                    <p>
+                        Payroll Document
+                    </p>
+
+                </div>
+
+                <div class="history-actions">
+
+                    <button
+                        class="mini-btn"
+                        (click)="selectHistoryPayslip(item)"
+                    >
+                        Open
+                    </button>
+
+                    <button
+                        class="mini-btn"
+                        (click)="downloadPdf(item)"
+                    >
+                        Download
+                    </button>
+
+                    <button
+                        class="mini-btn"
+                        (click)="printPayslip(item)"
+                    >
+                        Print
+                    </button>
+
+                    <button
+                        class="mini-btn"
+                        (click)="mailPayslip(item)"
+                    >
+                        Mail
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
